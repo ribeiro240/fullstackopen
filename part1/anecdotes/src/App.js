@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import NextButton from './components/NextButton';
+import Button from './components/Button';
 
 const App = (props) => {
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(Array(6).fill(0));
 
   const anecdotes = [
     'If it hurts, do it more often',
@@ -13,15 +14,23 @@ const App = (props) => {
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
   ]
 
+
   function nextAnecdote() {
-    console.log(Math.random() * anecdotes.length)
     setSelected(Math.floor(Math.random() * anecdotes.length));
+  }
+
+  function addVote() {
+    const votesArray = [...votes];
+    votesArray[selected] += 1;
+    setVotes([...votesArray]);
   }
 
   return (
     <div>
       <p>{anecdotes[selected]}</p>
-      <NextButton handleClick={nextAnecdote}/>
+      <p>has {votes[selected]} votes</p>
+      <Button handleClick={addVote} text="Vote" />
+      <Button handleClick={nextAnecdote} text="Next Anecdote"/>
     </div>
   )
 }
