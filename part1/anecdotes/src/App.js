@@ -4,6 +4,9 @@ import Button from './components/Button';
 const App = (props) => {
   const [selected, setSelected] = useState(0)
   const [votes, setVotes] = useState(Array(6).fill(0));
+  const [hasVotes, setHasVotes] = useState(false);
+  const [maxVotesIndex, setMaxVotesIndex] = useState(0);
+  const [anecdoteMostVoted, setAnecdoteMostVoted] = useState();
 
   const anecdotes = [
     'If it hurts, do it more often',
@@ -14,14 +17,16 @@ const App = (props) => {
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
   ]
 
-
   function nextAnecdote() {
     setSelected(Math.floor(Math.random() * anecdotes.length));
   }
 
   function addVote() {
+    if (!hasVotes) setHasVotes(true);
     const votesArray = [...votes];
     votesArray[selected] += 1;
+    setMaxVotesIndex(votes.indexOf(Math.max(...votes)))
+    setAnecdoteMostVoted(anecdotes[maxVotesIndex]);
     setVotes([...votesArray]);
   }
 
@@ -31,6 +36,9 @@ const App = (props) => {
       <p>has {votes[selected]} votes</p>
       <Button handleClick={addVote} text="Vote" />
       <Button handleClick={nextAnecdote} text="Next Anecdote"/>
+      <h1>Anecdote with most votes</h1>
+      <p>{anecdoteMostVoted}</p>
+      <p>has {votes[maxVotesIndex]} votes</p>
     </div>
   )
 }
