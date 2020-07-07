@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Header from './Components/Header';
 
 const App = (props) => {
   const [namesList, setNamesList] = useState([]);
@@ -18,7 +19,7 @@ const App = (props) => {
 
   return (
     <main>
-      <h1>Phonebook</h1>
+      <Header text="Phonebook" />
       <ul>
         {namesList.map((listItem, i) => {
           return <li key={listItem + i}>{listItem}</li>
