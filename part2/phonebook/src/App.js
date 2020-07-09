@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import Header from './Components/Header';
+import SearchField from './Components/SearchField';
+import AddEntry from './Components/AddEntry';
+import RenderPhonebook from './Components/RenderPhonebook';
 import './App.css';
 
-const App = (props) => {
+const App = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const [phonebook, setPhonebook] = useState([[name, number]]);
@@ -31,35 +34,21 @@ const App = (props) => {
   }
 
   const filteredPhonebook = phonebook.filter((phoneEntry) => {
-    return (phoneEntry[0].indexOf(search) !== -1) || (phoneEntry[1].indexOf(search) !== -1)
+    return (phoneEntry[0].toLowerCase().indexOf(search.toLowerCase()) !== -1) || (phoneEntry[1].indexOf(search) !== -1)
   })
 
   return (
     <main>
       <Header text="Phonebook"/>
-      <input value={search}
-        onChange={(event) => setSearch(event.target.value)}
+      <SearchField searchValue={search}
+        onChangeHandler={(event) => setSearch(event.target.value)}
        />
       <Header text="Add a new Name"/>
-      <form onSubmit={addName}>
-        Name: <input value={name}
-          onChange={handleNewName}
-          onClick={() => setName('')}/>
-        Number: <input value={number}
-          onChange={handleNewNumber}
-          onClick={() => setNumber('')} />
-        <button type="submit">save</button>
-      </form>
+      <AddEntry submit={addName} handleNewName={handleNewName}
+        handleNewNumber={handleNewNumber} handleNumberClick={() => setNumber('')}
+        handleNameClick={() => setName('')} />
       <Header text="Numbers" />
-      <ul>
-        {filteredPhonebook.map((phoneEntry, i) => {
-          return (
-            <div key={'div' + i}>
-              <li key={phoneEntry[0] + i}>{phoneEntry[0]} {phoneEntry[1]}</li>
-            </div>
-          )
-        })}
-      </ul>
+      <RenderPhonebook filteredPhonebook={filteredPhonebook} />
     </main>
   )
 }
