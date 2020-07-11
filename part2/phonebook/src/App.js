@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Header from './Components/Header';
 import SearchField from './Components/SearchField';
 import AddEntry from './Components/AddEntry';
@@ -8,7 +9,7 @@ import './App.css';
 const App = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  const [phonebook, setPhonebook] = useState([[name, number]]);
+  const [phonebook, setPhonebook] = useState([]);
   const [search, setSearch] = useState('');
 
   const addName = (event) => {
@@ -17,13 +18,20 @@ const App = () => {
     let numberNameString = JSON.stringify([name, number]);
     let isRepeated = phonebookString.indexOf(numberNameString);
     if (isRepeated === -1 && name.trim().length > 0) {
-      setPhonebook([...phonebook].concat([[name, number]]));
+      setPhonebook([...phonebook].concat([{name, number}]));
       setName('');
       setNumber('');
     } else {
       alert(`${name} is already added to phonebook`)
     }
   }
+
+  useEffect(() => {
+    axios.get('http://localhost:3001/persons')
+      .then(response => {
+        setPhonebook(response.data);
+      });
+  }, []);
 
   const handleNewName = (event) => {
     setName(event.target.value);
@@ -34,7 +42,7 @@ const App = () => {
   }
 
   const filteredPhonebook = phonebook.filter((phoneEntry) => {
-    return (phoneEntry[0].toLowerCase().indexOf(search.toLowerCase()) !== -1) || (phoneEntry[1].indexOf(search) !== -1)
+    return (phoneEntry.name.toLowerCase().indexOf(search.toLowerCase()) !== -1) || (phoneEntry.number.indexOf(search) !== -1)
   })
 
   return (
