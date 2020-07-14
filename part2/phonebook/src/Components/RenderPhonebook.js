@@ -1,7 +1,6 @@
 import React from 'react';
 
 const RenderPhonebook = (props) => {
-  console.log(props)
   if (props.filteredPhonebook.length == 0) return (<h2>Phonebook is empty</h2>)
 
   return(

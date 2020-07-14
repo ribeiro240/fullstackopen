@@ -4,6 +4,7 @@ import Header from './Components/Header';
 import SearchField from './Components/SearchField';
 import AddEntry from './Components/AddEntry';
 import RenderPhonebook from './Components/RenderPhonebook';
+import PhonebookServices from './services/PhonebookServices';
 import './App.css';
 
 const App = () => {
@@ -15,10 +16,11 @@ const App = () => {
   const addName = (event) => {
     event.preventDefault();
     let phonebookString = JSON.stringify(phonebook);
-    let numberNameString = JSON.stringify([name, number]);
+    let numberNameString = JSON.stringify({name, number});
     let isRepeated = phonebookString.indexOf(numberNameString);
     if (isRepeated === -1 && name.trim().length > 0) {
-      setPhonebook([...phonebook].concat([{name, number}]));
+      PhonebookServices.create({name, number})
+        .then(setPhonebook([...phonebook].concat([{name, number}])));
       setName('');
       setNumber('');
     } else {
@@ -27,9 +29,9 @@ const App = () => {
   }
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons')
+    PhonebookServices.getAll()
       .then(response => {
-        setPhonebook(response.data);
+        setPhonebook(response);
       });
   }, []);
 
@@ -43,7 +45,7 @@ const App = () => {
 
   const filteredPhonebook = phonebook.filter((phoneEntry) => {
     return (phoneEntry.name.toLowerCase().indexOf(search.toLowerCase()) !== -1) || (phoneEntry.number.indexOf(search) !== -1)
-  })
+  });
 
   return (
     <main>
