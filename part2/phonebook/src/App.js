@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import Header from './Components/Header';
 import SearchField from './Components/SearchField';
 import AddEntry from './Components/AddEntry';
@@ -47,6 +46,16 @@ const App = () => {
     return (phoneEntry.name.toLowerCase().indexOf(search.toLowerCase()) !== -1) || (phoneEntry.number.indexOf(search) !== -1)
   });
 
+  const handleDeleteButton = (event) => {
+    const itemToBeDeletedId = event.target.id;
+    console.log(itemToBeDeletedId)
+
+    PhonebookServices.deleteNumber(itemToBeDeletedId);
+    const filteredPhonebook = phonebook.filter((phone) => phone.id.toString() !== itemToBeDeletedId)
+    setPhonebook(filteredPhonebook);
+    console.log(phonebook[0].id === itemToBeDeletedId)
+  }
+
   return (
     <main>
       <Header text="Phonebook"/>
@@ -58,7 +67,7 @@ const App = () => {
         handleNewNumber={handleNewNumber} handleNumberClick={() => setNumber('')}
         handleNameClick={() => setName('')} />
       <Header text="Numbers" />
-      <RenderPhonebook filteredPhonebook={filteredPhonebook} />
+      <RenderPhonebook filteredPhonebook={filteredPhonebook} handleDeleteButton={handleDeleteButton}/>
     </main>
   )
 }
